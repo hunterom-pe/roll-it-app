@@ -38,6 +38,7 @@ public struct LogTabView: View {
                                 overview: item.overview,
                                 posterPath: item.posterPath,
                                 releaseYear: item.releaseYear,
+                                runtime: item.runtime,
                                 keywords: item.keywords,
                                 providerLogos: item.providerLogos
                             )
@@ -74,7 +75,8 @@ public struct LogTabView: View {
                                         .lineLimit(1)
                                     
                                     HStack {
-                                        Text(item.releaseYear)
+                                        let runtimeStr = formatRuntime(item.runtime)
+                                        Text("\(item.releaseYear)\(runtimeStr.isEmpty ? "" : "  •  \(runtimeStr)")")
                                             .font(.caption)
                                             .foregroundColor(.secondaryText)
                                         
@@ -126,6 +128,17 @@ public struct LogTabView: View {
         formatter.dateStyle = .medium
         formatter.timeStyle = .short
         return formatter.string(from: date)
+    }
+    
+    private func formatRuntime(_ minutes: Int?) -> String {
+        guard let minutes = minutes, minutes > 0 else { return "" }
+        let hours = minutes / 60
+        let mins = minutes % 60
+        if hours > 0 {
+            return "\(hours)h \(mins)m"
+        } else {
+            return "\(mins)m"
+        }
     }
 }
 

@@ -5,14 +5,16 @@ public struct MovieDetailData: Sendable {
     public let overview: String
     public let posterPath: String?
     public let releaseYear: String
+    public let runtime: Int?
     public let keywords: [String]
     public let providerLogos: [String]
     
-    public init(title: String, overview: String, posterPath: String?, releaseYear: String, keywords: [String], providerLogos: [String]) {
+    public init(title: String, overview: String, posterPath: String?, releaseYear: String, runtime: Int?, keywords: [String], providerLogos: [String]) {
         self.title = title
         self.overview = overview
         self.posterPath = posterPath
         self.releaseYear = releaseYear
+        self.runtime = runtime
         self.keywords = keywords
         self.providerLogos = providerLogos
     }
@@ -23,6 +25,17 @@ public struct MovieDetailView: View {
     
     public init(data: MovieDetailData) {
         self.data = data
+    }
+    
+    private func formatRuntime(_ minutes: Int?) -> String {
+        guard let minutes = minutes, minutes > 0 else { return "" }
+        let hours = minutes / 60
+        let mins = minutes % 60
+        if hours > 0 {
+            return "\(hours)h \(mins)m"
+        } else {
+            return "\(mins)m"
+        }
     }
     
     public var body: some View {
@@ -77,14 +90,15 @@ public struct MovieDetailView: View {
                     .cornerRadius(16)
                 }
                 
-                // Title and Year
+                // Title and Year/Runtime
                 VStack(alignment: .leading, spacing: 6) {
                     HStack(alignment: .firstTextBaseline, spacing: 12) {
                         Text(data.title)
                             .font(.system(size: 28, weight: .bold, design: .rounded))
                             .foregroundColor(.white)
                         
-                        Text(data.releaseYear)
+                        let runtimeStr = formatRuntime(data.runtime)
+                        Text("\(data.releaseYear)\(runtimeStr.isEmpty ? "" : "  •  \(runtimeStr)")")
                             .font(.system(size: 20, weight: .medium, design: .rounded))
                             .foregroundColor(.secondaryText)
                     }
@@ -151,6 +165,7 @@ public struct MovieDetailView: View {
         overview: "Cobb, a skilled thief who commits corporate espionage by infiltrating the subconscious of his targets, is offered a chance to regain his old life as payment for a task considered to be impossible: \"inception\", the implantation of another person's idea into a target's subconscious.",
         posterPath: nil,
         releaseYear: "2010",
+        runtime: 148,
         keywords: ["dream", "subconscious", "heist"],
         providerLogos: []
     ))

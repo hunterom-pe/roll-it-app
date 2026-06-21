@@ -8,16 +8,18 @@ public final class MovieLogItem {
     public var overview: String
     public var posterPath: String?
     public var releaseYear: String
+    public var runtime: Int?
     public var keywords: [String]
     public var providerLogos: [String]
     public var watchedAt: Date
     
-    public init(id: Int, title: String, overview: String, posterPath: String?, releaseYear: String, keywords: [String], providerLogos: [String], watchedAt: Date = Date()) {
+    public init(id: Int, title: String, overview: String, posterPath: String?, releaseYear: String, runtime: Int?, keywords: [String], providerLogos: [String], watchedAt: Date = Date()) {
         self.id = id
         self.title = title
         self.overview = overview
         self.posterPath = posterPath
         self.releaseYear = releaseYear
+        self.runtime = runtime
         self.keywords = keywords
         self.providerLogos = providerLogos
         self.watchedAt = watchedAt

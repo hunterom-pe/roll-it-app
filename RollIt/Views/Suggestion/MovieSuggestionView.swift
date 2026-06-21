@@ -88,7 +88,8 @@ public struct MovieSuggestionView: View {
                                         Text(movie.title)
                                             .font(.system(size: 24, weight: .bold, design: .rounded))
                                             .foregroundColor(.white)
-                                        Text(movie.releaseYear)
+                                        let runtimeStr = formatRuntime(movie.runtime)
+                                        Text("\(movie.releaseYear)\(runtimeStr.isEmpty ? "" : "  •  \(runtimeStr)")")
                                             .font(.system(size: 18, weight: .medium, design: .rounded))
                                             .foregroundColor(.secondaryText)
                                     }
@@ -298,6 +299,17 @@ public struct MovieSuggestionView: View {
                     await viewModel?.loadInitialSuggestions()
                 }
             }
+        }
+    }
+    
+    private func formatRuntime(_ minutes: Int?) -> String {
+        guard let minutes = minutes, minutes > 0 else { return "" }
+        let hours = minutes / 60
+        let mins = minutes % 60
+        if hours > 0 {
+            return "\(hours)h \(mins)m"
+        } else {
+            return "\(mins)m"
         }
     }
 }
