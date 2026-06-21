@@ -97,6 +97,7 @@ public struct MainRootView: View {
                                             
                                             LogoView(size: 140, rotationAngle: isLogoRotating)
                                                 .matchedGeometryEffect(id: "logo", in: launchNamespace)
+                                                .animation(.linear(duration: 25).repeatForever(autoreverses: false), value: isLogoRotating)
                                         }
                                         .padding(.bottom, 12)
                                         
@@ -128,6 +129,7 @@ public struct MainRootView: View {
                                                             .stroke(Color.neonAmber, lineWidth: 2)
                                                             .scaleEffect(pulseScale)
                                                             .opacity(pulseOpacity)
+                                                            .animation(.easeOut(duration: 1.8).repeatForever(autoreverses: false), value: pulseScale)
                                                         
                                                         RoundedRectangle(cornerRadius: 12)
                                                             .fill(Color.neonAmber)
@@ -139,15 +141,10 @@ public struct MainRootView: View {
                                     }
                                 }
                                 .onAppear {
-                                    // Infinite rotation
-                                    withAnimation(.linear(duration: 25).repeatForever(autoreverses: false)) {
-                                        isLogoRotating = 360.0
-                                    }
-                                    // Infinite pulse
-                                    withAnimation(.easeOut(duration: 1.8).repeatForever(autoreverses: false)) {
-                                        pulseScale = 1.15
-                                        pulseOpacity = 0.0
-                                    }
+                                    // Set states directly; animations are handled implicitly by .animation modifiers
+                                    isLogoRotating = 360.0
+                                    pulseScale = 1.15
+                                    pulseOpacity = 0.0
                                     // Fetch background posters
                                     if backgroundPosters.isEmpty {
                                         fetchBackgroundPosters()
