@@ -12,8 +12,10 @@ public final class MovieLogItem {
     public var keywords: [String]
     public var providerLogos: [String]
     public var watchedAt: Date
+    public var userScore: Double?
+    public var popularity: Double?
     
-    public init(id: Int, title: String, overview: String, posterPath: String?, releaseYear: String, runtime: Int?, keywords: [String], providerLogos: [String], watchedAt: Date = Date()) {
+    public init(id: Int, title: String, overview: String, posterPath: String?, releaseYear: String, runtime: Int?, keywords: [String], providerLogos: [String], watchedAt: Date = Date(), userScore: Double? = nil, popularity: Double? = nil) {
         self.id = id
         self.title = title
         self.overview = overview
@@ -23,5 +25,7 @@ public final class MovieLogItem {
         self.keywords = keywords
         self.providerLogos = providerLogos
         self.watchedAt = watchedAt
+        self.userScore = userScore
+        self.popularity = popularity
     }
 }

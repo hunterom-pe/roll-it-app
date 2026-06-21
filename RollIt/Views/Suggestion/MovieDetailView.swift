@@ -8,8 +8,10 @@ public struct MovieDetailData: Sendable {
     public let runtime: Int?
     public let keywords: [String]
     public let providerLogos: [String]
+    public let userScore: Double?
+    public let popularity: Double?
     
-    public init(title: String, overview: String, posterPath: String?, releaseYear: String, runtime: Int?, keywords: [String], providerLogos: [String]) {
+    public init(title: String, overview: String, posterPath: String?, releaseYear: String, runtime: Int?, keywords: [String], providerLogos: [String], userScore: Double? = nil, popularity: Double? = nil) {
         self.title = title
         self.overview = overview
         self.posterPath = posterPath
@@ -17,6 +19,8 @@ public struct MovieDetailData: Sendable {
         self.runtime = runtime
         self.keywords = keywords
         self.providerLogos = providerLogos
+        self.userScore = userScore
+        self.popularity = popularity
     }
 }
 
@@ -36,6 +40,11 @@ public struct MovieDetailView: View {
         } else {
             return "\(mins)m"
         }
+    }
+    
+    private func formatUserScore(_ score: Double?) -> String {
+        guard let score = score, score > 0 else { return "" }
+        return String(format: "⭐ %.1f", score)
     }
     
     public var body: some View {
@@ -89,43 +98,80 @@ public struct MovieDetailView: View {
                     .cornerRadius(16)
                 }
                 
-                // Title and Year/Runtime
-                VStack(alignment: .leading, spacing: 6) {
-                    HStack(alignment: .firstTextBaseline, spacing: 12) {
-                        Text(data.title)
-                            .font(.system(size: 28, weight: .bold, design: .rounded))
-                            .foregroundColor(.white)
-                        
+                // Title and Metadata
+                VStack(alignment: .leading, spacing: 8) {
+                    Text(data.title)
+                        .font(.system(size: 28, weight: .bold, design: .rounded))
+                        .foregroundColor(.white)
+                    
+                    let metadataText: String = {
                         let runtimeStr = formatRuntime(data.runtime)
-                        Text("\(data.releaseYear)\(runtimeStr.isEmpty ? "" : "  •  \(runtimeStr)")")
-                            .font(.system(size: 20, weight: .medium, design: .rounded))
-                            .foregroundColor(.secondaryText)
-                    }
+                        let scoreStr = formatUserScore(data.userScore)
+                        var parts: [String] = [data.releaseYear]
+                        if !runtimeStr.isEmpty {
+                            parts.append(runtimeStr)
+                        }
+                        if !scoreStr.isEmpty {
+                            parts.append(scoreStr)
+                        }
+                        return parts.joined(separator: "  •  ")
+                    }()
+                    
+                    Text(metadataText)
+                        .font(.system(size: 18, weight: .medium, design: .rounded))
+                        .foregroundColor(.secondaryText)
                 }
                 
-                // Provider Badges (if any)
-                if !data.providerLogos.isEmpty {
+                // Provider Badges & Popularity Row
+                if !data.providerLogos.isEmpty || (data.popularity != nil && data.popularity! > 0) {
                     VStack(alignment: .leading, spacing: 10) {
-                        Text("Streaming Providers")
+                        Text(data.providerLogos.isEmpty ? "Popularity" : "Streaming Providers")
                             .font(.headline)
                             .foregroundColor(.neonAmber)
                         
-                        HStack(spacing: 10) {
-                            ForEach(0..<data.providerLogos.count, id: \.self) { idx in
-                                let path = data.providerLogos[idx]
-                                if let url = URL(string: "\(TMDBConfig.baseImageURL)\(path)") {
-                                    AsyncImage(url: url) { image in
-                                        image.resizable()
-                                    } placeholder: {
-                                        Color.white.opacity(0.1)
+                        HStack {
+                            if !data.providerLogos.isEmpty {
+                                HStack(spacing: 10) {
+                                    ForEach(0..<data.providerLogos.count, id: \.self) { idx in
+                                        let path = data.providerLogos[idx]
+                                        if let url = URL(string: "\(TMDBConfig.baseImageURL)\(path)") {
+                                            AsyncImage(url: url) { image in
+                                                image.resizable()
+                                            } placeholder: {
+                                                Color.white.opacity(0.1)
+                                            }
+                                            .frame(width: 44, height: 44)
+                                            .cornerRadius(10)
+                                            .overlay(
+                                                RoundedRectangle(cornerRadius: 10)
+                                                    .stroke(Color.white.opacity(0.15), lineWidth: 1)
+                                            )
+                                        }
                                     }
-                                    .frame(width: 44, height: 44)
-                                    .cornerRadius(10)
-                                    .overlay(
-                                        RoundedRectangle(cornerRadius: 10)
-                                            .stroke(Color.white.opacity(0.15), lineWidth: 1)
-                                    )
                                 }
+                            }
+                            
+                            if let popularity = data.popularity, popularity > 0 {
+                                if !data.providerLogos.isEmpty {
+                                    Spacer()
+                                }
+                                
+                                HStack(spacing: 6) {
+                                    Image(systemName: "flame.fill")
+                                        .foregroundColor(.orange)
+                                    Text(String(format: "%.0f", popularity))
+                                        .font(.system(.subheadline, design: .rounded))
+                                        .fontWeight(.bold)
+                                        .foregroundColor(.white)
+                                }
+                                .padding(.horizontal, 12)
+                                .padding(.vertical, 8)
+                                .background(Color.white.opacity(0.08))
+                                .cornerRadius(20)
+                                .overlay(
+                                    RoundedRectangle(cornerRadius: 20)
+                                        .stroke(Color.white.opacity(0.1), lineWidth: 1)
+                                )
                             }
                         }
                     }

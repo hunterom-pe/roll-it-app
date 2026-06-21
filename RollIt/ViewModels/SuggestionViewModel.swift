@@ -102,7 +102,9 @@ public final class SuggestionViewModel {
             releaseYear: movie.releaseYear,
             runtime: movie.runtime,
             keywords: movie.keywordsWrapper?.keywords.map { $0.name } ?? [],
-            providerLogos: movie.sortedProviders.compactMap { $0.logoPath }
+            providerLogos: movie.sortedProviders.compactMap { $0.logoPath },
+            userScore: movie.voteAverage,
+            popularity: movie.popularity
         )
         
         modelContext.insert(logItem)

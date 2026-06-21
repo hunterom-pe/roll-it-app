@@ -10,6 +10,9 @@ public struct DiscoverMovie: Codable, Identifiable, Sendable {
     public let overview: String
     public let posterPath: String?
     public let releaseDate: String?
+    public let voteAverage: Double?
+    public let voteCount: Int?
+    public let popularity: Double?
     
     enum CodingKeys: String, CodingKey {
         case id
@@ -17,6 +20,9 @@ public struct DiscoverMovie: Codable, Identifiable, Sendable {
         case overview
         case posterPath = "poster_path"
         case releaseDate = "release_date"
+        case voteAverage = "vote_average"
+        case voteCount = "vote_count"
+        case popularity
     }
 }
 
@@ -68,6 +74,9 @@ public struct MovieDetails: Codable, Identifiable, Sendable {
     public let genres: [Genre]?
     public let keywordsWrapper: KeywordsWrapper?
     public let watchProvidersWrapper: WatchProvidersResults?
+    public let voteAverage: Double?
+    public let voteCount: Int?
+    public let popularity: Double?
     
     enum CodingKeys: String, CodingKey {
         case id
@@ -79,6 +88,9 @@ public struct MovieDetails: Codable, Identifiable, Sendable {
         case genres
         case keywordsWrapper = "keywords"
         case watchProvidersWrapper = "watch/providers"
+        case voteAverage = "vote_average"
+        case voteCount = "vote_count"
+        case popularity
     }
     
     public var releaseYear: String {

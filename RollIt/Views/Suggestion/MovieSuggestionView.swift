@@ -82,33 +82,71 @@ public struct MovieSuggestionView: View {
                                 }
                                 
                                 // Details
-                                VStack(alignment: .leading, spacing: 6) {
-                                    HStack(alignment: .firstTextBaseline, spacing: 10) {
-                                        Text(movie.title)
-                                            .font(.system(size: 24, weight: .bold, design: .rounded))
-                                            .foregroundColor(.white)
+                                VStack(alignment: .leading, spacing: 8) {
+                                    Text(movie.title)
+                                        .font(.system(size: 24, weight: .bold, design: .rounded))
+                                        .foregroundColor(.white)
+                                    
+                                    let metadataText: String = {
                                         let runtimeStr = formatRuntime(movie.runtime)
-                                        Text("\(movie.releaseYear)\(runtimeStr.isEmpty ? "" : "  •  \(runtimeStr)")")
-                                            .font(.system(size: 18, weight: .medium, design: .rounded))
-                                            .foregroundColor(.secondaryText)
-                                    }
+                                        let scoreStr = formatUserScore(movie.voteAverage)
+                                        var parts: [String] = [movie.releaseYear]
+                                        if !runtimeStr.isEmpty {
+                                            parts.append(runtimeStr)
+                                        }
+                                        if !scoreStr.isEmpty {
+                                            parts.append(scoreStr)
+                                        }
+                                        return parts.joined(separator: "  •  ")
+                                    }()
+                                    
+                                    Text(metadataText)
+                                        .font(.system(size: 16, weight: .medium, design: .rounded))
+                                        .foregroundColor(.secondaryText)
                                 }
                                 
-                                // Providers
+                                // Providers & Popularity Row
                                 let providers = movie.sortedProviders
-                                if !providers.isEmpty {
-                                    HStack(spacing: 8) {
-                                        ForEach(providers.prefix(5)) { provider in
-                                            if let path = provider.logoPath,
-                                               let url = URL(string: "\(TMDBConfig.baseImageURL)\(path)") {
-                                                AsyncImage(url: url) { image in
-                                                    image.resizable()
-                                                } placeholder: {
-                                                    Color.white.opacity(0.1)
+                                if !providers.isEmpty || (movie.popularity != nil && movie.popularity! > 0) {
+                                    HStack(alignment: .center) {
+                                        if !providers.isEmpty {
+                                            HStack(spacing: 8) {
+                                                ForEach(providers.prefix(5)) { provider in
+                                                    if let path = provider.logoPath,
+                                                       let url = URL(string: "\(TMDBConfig.baseImageURL)\(path)") {
+                                                        AsyncImage(url: url) { image in
+                                                            image.resizable()
+                                                        } placeholder: {
+                                                            Color.white.opacity(0.1)
+                                                        }
+                                                        .frame(width: 32, height: 32)
+                                                        .cornerRadius(6)
+                                                    }
                                                 }
-                                                .frame(width: 32, height: 32)
-                                                .cornerRadius(6)
                                             }
+                                        }
+                                        
+                                        if let popularity = movie.popularity, popularity > 0 {
+                                            if !providers.isEmpty {
+                                                Spacer()
+                                            }
+                                            
+                                            HStack(spacing: 4) {
+                                                Image(systemName: "flame.fill")
+                                                    .font(.caption)
+                                                    .foregroundColor(.orange)
+                                                Text(String(format: "%.0f", popularity))
+                                                    .font(.system(size: 13, weight: .bold, design: .rounded))
+                                                    .foregroundColor(.white)
+                                            }
+                                            .padding(.horizontal, 10)
+                                            .padding(.vertical, 6)
+                                            .background(Color.white.opacity(0.08))
+                                            .cornerRadius(12)
+                                            .overlay(
+                                                RoundedRectangle(cornerRadius: 12)
+                                                    .stroke(Color.white.opacity(0.1), lineWidth: 1)
+                                            )
                                         }
                                     }
                                 }
@@ -310,5 +348,10 @@ public struct MovieSuggestionView: View {
         } else {
             return "\(mins)m"
         }
+    }
+    
+    private func formatUserScore(_ score: Double?) -> String {
+        guard let score = score, score > 0 else { return "" }
+        return String(format: "⭐ %.1f", score)
     }
 }

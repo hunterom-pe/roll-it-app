@@ -40,7 +40,9 @@ public struct LogTabView: View {
                                 releaseYear: item.releaseYear,
                                 runtime: item.runtime,
                                 keywords: item.keywords,
-                                providerLogos: item.providerLogos
+                                providerLogos: item.providerLogos,
+                                userScore: item.userScore,
+                                popularity: item.popularity
                             )
                         } label: {
                             HStack(spacing: 16) {
