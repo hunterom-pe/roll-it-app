@@ -53,10 +53,9 @@ public struct MovieSuggestionView: View {
                                         case .success(let image):
                                             image
                                                 .resizable()
-                                                .aspectRatio(contentMode: .fill)
+                                                .aspectRatio(contentMode: .fit)
                                                 .frame(maxWidth: .infinity)
                                                 .frame(height: 380)
-                                                .clipped()
                                                 .cornerRadius(16)
                                                 .overlay(
                                                     RoundedRectangle(cornerRadius: 16)

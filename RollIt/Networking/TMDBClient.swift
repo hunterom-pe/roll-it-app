@@ -34,7 +34,8 @@ public actor TMDBClient {
             URLQueryItem(name: "sort_by", value: "popularity.desc"),
             URLQueryItem(name: "watch_region", value: TMDBConfig.region),
             URLQueryItem(name: "vote_average.gte", value: "6.0"),
-            URLQueryItem(name: "vote_count.gte", value: "100")
+            URLQueryItem(name: "vote_count.gte", value: "100"),
+            URLQueryItem(name: "with_watch_monetization_types", value: "flatrate|rent|buy|free|ads")
         ]
         
         if !genreIds.isEmpty {
