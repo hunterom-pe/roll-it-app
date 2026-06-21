@@ -2,11 +2,15 @@ import SwiftUI
 
 public struct LogoView: View {
     let size: CGFloat
-    let rotationAngle: Double
+    let isRotating: Bool
+    let staticRotationAngle: Double
     
-    public init(size: CGFloat = 110, rotationAngle: Double = 0.0) {
+    @State private var rotationAngle: Double = 0.0
+    
+    public init(size: CGFloat = 110, isRotating: Bool = false, staticRotationAngle: Double = 0.0) {
         self.size = size
-        self.rotationAngle = rotationAngle
+        self.isRotating = isRotating
+        self.staticRotationAngle = staticRotationAngle
     }
     
     public var body: some View {
@@ -38,8 +42,15 @@ public struct LogoView: View {
                     .rotationEffect(.degrees(angle))
             }
         }
-        .rotationEffect(.degrees(rotationAngle)) // Rotate drawings first
+        .rotationEffect(.degrees(isRotating ? rotationAngle : staticRotationAngle)) // Rotate drawings first
         .frame(width: size, height: size)        // Set fixed layout frame last
+        .onAppear {
+            if isRotating {
+                withAnimation(.linear(duration: 25).repeatForever(autoreverses: false)) {
+                    rotationAngle = 360.0
+                }
+            }
+        }
     }
 }
 
@@ -47,7 +58,7 @@ public struct LogoView: View {
     ZStack {
         Color.black.ignoresSafeArea()
         VStack(spacing: 20) {
-            LogoView(size: 180, rotationAngle: 45)
+            LogoView(size: 180, isRotating: true)
             LogoView(size: 110)
             LogoView(size: 40)
         }

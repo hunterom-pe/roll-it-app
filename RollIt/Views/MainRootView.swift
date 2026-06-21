@@ -11,11 +11,8 @@ public struct MainRootView: View {
     @State private var activeCriteria: QuizCriteria? = nil
     @State private var showSettings = false
     
-    // Welcome screen revamped animations & background
+    // Welcome screen revamped background
     @State private var backgroundPosters: [String] = []
-    @State private var isLogoRotating = 0.0
-    @State private var pulseScale = 1.0
-    @State private var pulseOpacity = 0.6
     
     public enum AppState {
         case welcome
@@ -95,9 +92,8 @@ public struct MainRootView: View {
                                                 .frame(width: 200, height: 200)
                                                 .blur(radius: 35)
                                             
-                                            LogoView(size: 140, rotationAngle: isLogoRotating)
+                                            LogoView(size: 140, isRotating: true)
                                                 .matchedGeometryEffect(id: "logo", in: launchNamespace)
-                                                .animation(.linear(duration: 25).repeatForever(autoreverses: false), value: isLogoRotating)
                                         }
                                         .padding(.bottom, 12)
                                         
@@ -125,11 +121,7 @@ public struct MainRootView: View {
                                                 .padding(.vertical, 16)
                                                 .background(
                                                     ZStack {
-                                                        RoundedRectangle(cornerRadius: 12)
-                                                            .stroke(Color.neonAmber, lineWidth: 2)
-                                                            .scaleEffect(pulseScale)
-                                                            .opacity(pulseOpacity)
-                                                            .animation(.easeOut(duration: 1.8).repeatForever(autoreverses: false), value: pulseScale)
+                                                        PulsingOutline()
                                                         
                                                         RoundedRectangle(cornerRadius: 12)
                                                             .fill(Color.neonAmber)
@@ -141,10 +133,6 @@ public struct MainRootView: View {
                                     }
                                 }
                                 .onAppear {
-                                    // Set states directly; animations are handled implicitly by .animation modifiers
-                                    isLogoRotating = 360.0
-                                    pulseScale = 1.15
-                                    pulseOpacity = 0.0
                                     // Fetch background posters
                                     if backgroundPosters.isEmpty {
                                         fetchBackgroundPosters()
@@ -225,4 +213,22 @@ public struct MainRootView: View {
 #Preview {
     MainRootView()
         .modelContainer(for: [MovieLogItem.self, ExcludedMovie.self, ProviderSkip.self], inMemory: true)
+}
+
+private struct PulsingOutline: View {
+    @State private var scale: CGFloat = 1.0
+    @State private var opacity: Double = 0.6
+    
+    var body: some View {
+        RoundedRectangle(cornerRadius: 12)
+            .stroke(Color.neonAmber, lineWidth: 2)
+            .scaleEffect(scale)
+            .opacity(opacity)
+            .onAppear {
+                withAnimation(.easeOut(duration: 1.8).repeatForever(autoreverses: false)) {
+                    scale = 1.15
+                    opacity = 0.0
+                }
+            }
+    }
 }
