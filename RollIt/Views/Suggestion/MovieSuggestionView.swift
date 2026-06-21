@@ -156,14 +156,14 @@ public struct MovieSuggestionView: View {
                             }
                             .padding(.horizontal, 16)
                             
-                            // Skips row
-                            HStack(spacing: 12) {
+                            // Skips stack (stacked vertically due to long labels)
+                            VStack(spacing: 10) {
                                 Button {
                                     Task {
                                         await vm.skipNoService()
                                     }
                                 } label: {
-                                    Text("No Service")
+                                    Text("I don't have this streaming service")
                                         .font(.subheadline)
                                         .fontWeight(.semibold)
                                         .foregroundColor(.white)
@@ -180,7 +180,7 @@ public struct MovieSuggestionView: View {
                                         await vm.skipNotInMood()
                                     }
                                 } label: {
-                                    Text("Not in Mood")
+                                    Text("Not in the mood")
                                         .font(.subheadline)
                                         .fontWeight(.semibold)
                                         .foregroundColor(.white)
