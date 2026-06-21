@@ -79,6 +79,7 @@ public final class SuggestionViewModel {
                     continue
                 }
                 
+                
                 // Client-side verification of release date (Era) criteria
                 if let releaseDate = details.releaseDate, !releaseDate.isEmpty {
                     if let minDate = criteria.minReleaseDate, releaseDate < minDate {
@@ -92,6 +93,20 @@ public final class SuggestionViewModel {
                 } else if criteria.minReleaseDate != nil || criteria.maxReleaseDate != nil {
                     currentIndex += 1
                     continue
+                }
+                
+                // Vibe-specific filtering: "Spooky & Chilling"
+                if criteria.vibeName == "Spooky & Chilling" {
+                    if let movieGenres = details.genres {
+                        let genreIds = movieGenres.map { $0.id }
+                        let isHorrorOrMystery = genreIds.contains(27) || genreIds.contains(9648)
+                        let hasActionOrComedyOrAdventure = genreIds.contains(28) || genreIds.contains(35) || genreIds.contains(12)
+                        
+                        if hasActionOrComedyOrAdventure && !isHorrorOrMystery {
+                            currentIndex += 1
+                            continue
+                        }
+                    }
                 }
                 
                 // Check provider exclusions

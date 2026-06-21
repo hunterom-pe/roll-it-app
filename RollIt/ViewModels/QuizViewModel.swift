@@ -2,6 +2,7 @@ import SwiftUI
 import Observation
 
 public struct QuizCriteria: Sendable {
+    public let vibeName: String?
     public let genreIds: [Int]
     public let minRuntime: Int?
     public let maxRuntime: Int?
@@ -88,6 +89,7 @@ public final class QuizViewModel {
         }
         
         return QuizCriteria(
+            vibeName: selectedVibe.name,
             genreIds: selectedVibe.genreIds,
             minRuntime: selectedRuntime.minRuntime,
             maxRuntime: selectedRuntime.maxRuntime,
