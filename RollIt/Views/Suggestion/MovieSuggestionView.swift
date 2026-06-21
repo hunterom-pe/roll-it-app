@@ -191,6 +191,19 @@ public struct MovieSuggestionView: View {
                                                 .stroke(Color.white.opacity(0.3), lineWidth: 1)
                                         )
                                 }
+                                
+                                Button {
+                                    withAnimation {
+                                        appState = .quiz
+                                    }
+                                } label: {
+                                    Text("Restart Quiz")
+                                        .font(.subheadline)
+                                        .fontWeight(.semibold)
+                                        .foregroundColor(.neonAmber)
+                                        .frame(maxWidth: .infinity)
+                                        .padding(.vertical, 12)
+                                }
                             }
                             .padding(.horizontal, 16)
                         }
