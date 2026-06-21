@@ -11,6 +11,12 @@ public struct MainRootView: View {
     @State private var activeCriteria: QuizCriteria? = nil
     @State private var showSettings = false
     
+    // Welcome screen revamped animations & background
+    @State private var backgroundPosters: [String] = []
+    @State private var isLogoRotating = 0.0
+    @State private var pulseScale = 1.0
+    @State private var pulseOpacity = 0.6
+    
     public enum AppState {
         case welcome
         case quiz
@@ -42,41 +48,111 @@ public struct MainRootView: View {
                             
                             switch appState {
                             case .welcome:
-                                VStack(spacing: 24) {
-                                    Spacer()
-                                    
-                                    // Logo is brought into the main welcome area to fill empty black space
-                                    LogoView(size: 140)
-                                        .matchedGeometryEffect(id: "logo", in: launchNamespace)
-                                    
-                                    Text("Roll It")
-                                        .font(.system(size: 40, weight: .bold, design: .rounded))
-                                        .foregroundColor(.white)
-                                    
-                                    Text("Stop scrolling. Start watching.")
-                                        .font(.subheadline)
-                                        .foregroundColor(.secondaryText)
-                                        .multilineTextAlignment(.center)
-                                    
-                                    Spacer()
-                                    
-                                    Button {
-                                        withAnimation(.easeInOut) {
-                                            appState = .quiz
+                                ZStack {
+                                    // 1. Faint Poster Collage Background
+                                    if !backgroundPosters.isEmpty {
+                                        let columns = [
+                                            GridItem(.flexible(), spacing: 12),
+                                            GridItem(.flexible(), spacing: 12),
+                                            GridItem(.flexible(), spacing: 12)
+                                        ]
+                                        LazyVGrid(columns: columns, spacing: 12) {
+                                            ForEach(backgroundPosters, id: \.self) { path in
+                                                if let url = URL(string: "\(TMDBConfig.baseImageURL)\(path)") {
+                                                    AsyncImage(url: url) { image in
+                                                        image
+                                                            .resizable()
+                                                            .aspectRatio(contentMode: .fill)
+                                                    } placeholder: {
+                                                        Color.clear
+                                                    }
+                                                    .frame(height: 150)
+                                                    .clipped()
+                                                    .opacity(0.08)
+                                                }
+                                            }
                                         }
-                                    } label: {
-                                        Text("Start Quiz")
-                                            .font(.headline)
-                                            .foregroundColor(.oledBlack)
-                                            .frame(maxWidth: .infinity)
-                                            .padding(.vertical, 16)
-                                            .background(
-                                                RoundedRectangle(cornerRadius: 12)
-                                                    .fill(Color.neonAmber)
-                                            )
+                                        .blur(radius: 2)
+                                        .ignoresSafeArea()
+                                        
+                                        // Gradient overlay to fade collage into OLED black
+                                        LinearGradient(
+                                            gradient: Gradient(colors: [.black, .clear, .black]),
+                                            startPoint: .top,
+                                            endPoint: .bottom
+                                        )
+                                        .ignoresSafeArea()
                                     }
-                                    .padding(.horizontal, 24)
-                                    .padding(.bottom, 48)
+                                    
+                                    // 2. Foreground Content
+                                    VStack(spacing: 24) {
+                                        Spacer()
+                                        
+                                        // Ambient glow behind spinning logo
+                                        ZStack {
+                                            Circle()
+                                                .fill(Color.neonAmber.opacity(0.12))
+                                                .frame(width: 200, height: 200)
+                                                .blur(radius: 35)
+                                            
+                                            LogoView(size: 140)
+                                                .rotationEffect(.degrees(isLogoRotating))
+                                                .matchedGeometryEffect(id: "logo", in: launchNamespace)
+                                        }
+                                        .padding(.bottom, 12)
+                                        
+                                        Text("Roll It")
+                                            .font(.system(size: 44, weight: .bold, design: .rounded))
+                                            .foregroundColor(.white)
+                                        
+                                        Text("Stop scrolling. Start watching.")
+                                            .font(.subheadline)
+                                            .foregroundColor(.secondaryText)
+                                            .multilineTextAlignment(.center)
+                                        
+                                        Spacer()
+                                        
+                                        // Pulsing CTA button
+                                        Button {
+                                            withAnimation(.easeInOut) {
+                                                appState = .quiz
+                                            }
+                                        } label: {
+                                            Text("Start Quiz")
+                                                .font(.headline)
+                                                .foregroundColor(.oledBlack)
+                                                .frame(maxWidth: .infinity)
+                                                .padding(.vertical, 16)
+                                                .background(
+                                                    ZStack {
+                                                        RoundedRectangle(cornerRadius: 12)
+                                                            .stroke(Color.neonAmber, lineWidth: 2)
+                                                            .scaleEffect(pulseScale)
+                                                            .opacity(pulseOpacity)
+                                                        
+                                                        RoundedRectangle(cornerRadius: 12)
+                                                            .fill(Color.neonAmber)
+                                                    }
+                                                )
+                                        }
+                                        .padding(.horizontal, 24)
+                                        .padding(.bottom, 48)
+                                    }
+                                }
+                                .onAppear {
+                                    // Infinite rotation
+                                    withAnimation(.linear(duration: 25).repeatForever(autoreverses: false)) {
+                                        isLogoRotating = 360.0
+                                    }
+                                    // Infinite pulse
+                                    withAnimation(.easeOut(duration: 1.8).repeatForever(autoreverses: false)) {
+                                        pulseScale = 1.15
+                                        pulseOpacity = 0.0
+                                    }
+                                    // Fetch background posters
+                                    if backgroundPosters.isEmpty {
+                                        fetchBackgroundPosters()
+                                    }
                                 }
                             case .quiz:
                                 QuizWizardView(appState: $appState, activeCriteria: $activeCriteria)
@@ -128,6 +204,24 @@ public struct MainRootView: View {
         }
         .sheet(isPresented: $showSettings) {
             SettingsView()
+        }
+    }
+    
+    private func fetchBackgroundPosters() {
+        Task {
+            do {
+                let client = TMDBClient()
+                let movies = try await client.discoverMovies(
+                    genreIds: [],
+                    minRuntime: nil,
+                    maxRuntime: nil,
+                    minReleaseDate: nil,
+                    maxReleaseDate: nil
+                )
+                self.backgroundPosters = Array(movies.prefix(12)).compactMap { $0.posterPath }
+            } catch {
+                print("Failed loading background posters: \(error)")
+            }
         }
     }
 }
