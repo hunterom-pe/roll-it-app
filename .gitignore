@@ -1,0 +1,33 @@
+# OS X
+.DS_Store
+
+# Xcode
+build/
+DerivedData/
+*.xcuserstate
+*.xcuserdata/
+*.xcscmblueprint
+*.xccheckout
+*.moved-aside
+*.ipa
+*.db.lock
+*.db-shm
+*.db-wal
+
+# Swift Package Manager
+.build/
+.swiftpm/
+
+# Fastlane
+fastlane/report.xml
+fastlane/Preview.html
+fastlane/screenshots/**/*.png
+fastlane/test_output
+
+# CocoaPods
+# We are not using CocoaPods, but standard to ignore
+Pods/
+Podfile.lock
+
+# Personal configurations
+TMDBConfig.swift.local
