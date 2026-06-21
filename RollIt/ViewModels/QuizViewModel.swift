@@ -46,7 +46,7 @@ public final class QuizViewModel {
     
     public let vibeOptions = [
         VibeOption(name: "Action-Packed", icon: "bolt.fill", genreIds: [28, 12]),
-        VibeOption(name: "Spooky & Chilling", icon: "ghost.fill", genreIds: [27, 53]),
+        VibeOption(name: "Spooky & Chilling", icon: "ghost", genreIds: [27, 53]),
         VibeOption(name: "Laugh Out Loud", icon: "face.smiling.fill", genreIds: [35]),
         VibeOption(name: "Heartwarming & Cozy", icon: "heart.fill", genreIds: [10749, 18, 10751]),
         VibeOption(name: "Mind-Bending / Sci-Fi", icon: "brain.head.profile", genreIds: [878, 9648]),
