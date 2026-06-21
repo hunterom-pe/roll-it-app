@@ -95,8 +95,7 @@ public struct MainRootView: View {
                                                 .frame(width: 200, height: 200)
                                                 .blur(radius: 35)
                                             
-                                            LogoView(size: 140)
-                                                .rotationEffect(.degrees(isLogoRotating))
+                                            LogoView(size: 140, rotationAngle: isLogoRotating)
                                                 .matchedGeometryEffect(id: "logo", in: launchNamespace)
                                         }
                                         .padding(.bottom, 12)
