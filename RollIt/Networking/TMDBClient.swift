@@ -32,7 +32,9 @@ public actor TMDBClient {
         var queryItems = [
             URLQueryItem(name: "api_key", value: TMDBConfig.apiKey),
             URLQueryItem(name: "sort_by", value: "popularity.desc"),
-            URLQueryItem(name: "watch_region", value: TMDBConfig.region)
+            URLQueryItem(name: "watch_region", value: TMDBConfig.region),
+            URLQueryItem(name: "vote_average.gte", value: "6.0"),
+            URLQueryItem(name: "vote_count.gte", value: "100")
         ]
         
         if !genreIds.isEmpty {
