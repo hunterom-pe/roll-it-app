@@ -90,12 +90,16 @@ public struct MovieSuggestionView: View {
                                     let metadataText: String = {
                                         let runtimeStr = formatRuntime(movie.runtime)
                                         let scoreStr = formatUserScore(movie.voteAverage)
+                                        let popularityStr = formatPopularity(movie.popularity)
                                         var parts: [String] = [movie.releaseYear]
                                         if !runtimeStr.isEmpty {
                                             parts.append(runtimeStr)
                                         }
                                         if !scoreStr.isEmpty {
                                             parts.append(scoreStr)
+                                        }
+                                        if !popularityStr.isEmpty {
+                                            parts.append(popularityStr)
                                         }
                                         return parts.joined(separator: "  •  ")
                                     }()
@@ -105,48 +109,21 @@ public struct MovieSuggestionView: View {
                                         .foregroundColor(.secondaryText)
                                 }
                                 
-                                // Providers & Popularity Row
+                                // Providers Row
                                 let providers = movie.sortedProviders
-                                if !providers.isEmpty || (movie.popularity != nil && movie.popularity! > 0) {
-                                    HStack(alignment: .center) {
-                                        if !providers.isEmpty {
-                                            HStack(spacing: 8) {
-                                                ForEach(providers.prefix(5)) { provider in
-                                                    if let path = provider.logoPath,
-                                                       let url = URL(string: "\(TMDBConfig.baseImageURL)\(path)") {
-                                                        AsyncImage(url: url) { image in
-                                                            image.resizable()
-                                                        } placeholder: {
-                                                            Color.white.opacity(0.1)
-                                                        }
-                                                        .frame(width: 32, height: 32)
-                                                        .cornerRadius(6)
-                                                    }
+                                if !providers.isEmpty {
+                                    HStack(spacing: 8) {
+                                        ForEach(providers.prefix(5)) { provider in
+                                            if let path = provider.logoPath,
+                                               let url = URL(string: "\(TMDBConfig.baseImageURL)\(path)") {
+                                                AsyncImage(url: url) { image in
+                                                    image.resizable()
+                                                } placeholder: {
+                                                    Color.white.opacity(0.1)
                                                 }
+                                                .frame(width: 32, height: 32)
+                                                .cornerRadius(6)
                                             }
-                                        }
-                                        
-                                        if let popularity = movie.popularity, popularity > 0 {
-                                            if !providers.isEmpty {
-                                                Spacer()
-                                            }
-                                            
-                                            HStack(spacing: 4) {
-                                                Image(systemName: "flame.fill")
-                                                    .font(.caption)
-                                                    .foregroundColor(.orange)
-                                                Text(String(format: "%.0f", popularity))
-                                                    .font(.system(size: 13, weight: .bold, design: .rounded))
-                                                    .foregroundColor(.white)
-                                            }
-                                            .padding(.horizontal, 10)
-                                            .padding(.vertical, 6)
-                                            .background(Color.white.opacity(0.08))
-                                            .cornerRadius(12)
-                                            .overlay(
-                                                RoundedRectangle(cornerRadius: 12)
-                                                    .stroke(Color.white.opacity(0.1), lineWidth: 1)
-                                            )
                                         }
                                     }
                                 }
@@ -353,5 +330,10 @@ public struct MovieSuggestionView: View {
     private func formatUserScore(_ score: Double?) -> String {
         guard let score = score, score > 0 else { return "" }
         return String(format: "⭐ %.1f", score)
+    }
+    
+    private func formatPopularity(_ pop: Double?) -> String {
+        guard let pop = pop, pop > 0 else { return "" }
+        return String(format: "🔥 %.0f", pop)
     }
 }
