@@ -65,7 +65,7 @@ public struct MainRootView: View {
                                                     }
                                                     .frame(height: 150)
                                                     .clipped()
-                                                    .opacity(0.2)
+                                                    .opacity(0.3)
                                                 }
                                             }
                                         }
