@@ -64,6 +64,36 @@ public final class SuggestionViewModel {
             do {
                 let details = try await client.fetchMovieDetails(id: id)
                 
+                // Client-side verification of runtime criteria
+                if let runtime = details.runtime {
+                    if let minR = criteria.minRuntime, runtime < minR {
+                        currentIndex += 1
+                        continue
+                    }
+                    if let maxR = criteria.maxRuntime, runtime > maxR {
+                        currentIndex += 1
+                        continue
+                    }
+                } else if criteria.minRuntime != nil || criteria.maxRuntime != nil {
+                    currentIndex += 1
+                    continue
+                }
+                
+                // Client-side verification of release date (Era) criteria
+                if let releaseDate = details.releaseDate, !releaseDate.isEmpty {
+                    if let minDate = criteria.minReleaseDate, releaseDate < minDate {
+                        currentIndex += 1
+                        continue
+                    }
+                    if let maxDate = criteria.maxReleaseDate, releaseDate > maxDate {
+                        currentIndex += 1
+                        continue
+                    }
+                } else if criteria.minReleaseDate != nil || criteria.maxReleaseDate != nil {
+                    currentIndex += 1
+                    continue
+                }
+                
                 // Check provider exclusions
                 if isProviderExcluded(details: details) {
                     // Implicitly exclude this movie and write to database so we don't check again
