@@ -37,7 +37,7 @@
 		37367DF49F812B1E5FD579ED /* LogTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogTabView.swift; sourceTree = "<group>"; };
 		519D117B022D65320FAC3108 /* MovieLogItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovieLogItem.swift; sourceTree = "<group>"; };
 		55DF6DE8368EDB737BBFB47F /* MainRootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainRootView.swift; sourceTree = "<group>"; };
-		56D1D6536B67D86AFFA51F9D /* RollIt.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = RollIt.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		56D1D6536B67D86AFFA51F9D /* Roll It.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Roll It.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		63499A872B10B22876C5A533 /* VibeGenreStepView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VibeGenreStepView.swift; sourceTree = "<group>"; };
 		6514F4BF958B6C1518CB66DE /* RuntimeStepView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RuntimeStepView.swift; sourceTree = "<group>"; };
 		88689740974331485058F27C /* EraStepView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EraStepView.swift; sourceTree = "<group>"; };
@@ -104,7 +104,7 @@
 		7827CCA81BA10EC0F9067AD7 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				56D1D6536B67D86AFFA51F9D /* RollIt.app */,
+				56D1D6536B67D86AFFA51F9D /* Roll It.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -182,7 +182,7 @@
 			packageProductDependencies = (
 			);
 			productName = RollIt;
-			productReference = 56D1D6536B67D86AFFA51F9D /* RollIt.app */;
+			productReference = 56D1D6536B67D86AFFA51F9D /* Roll It.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -193,8 +193,6 @@
 			attributes = {
 				BuildIndependentTargetsInParallel = YES;
 				LastUpgradeCheck = 1430;
-				TargetAttributes = {
-				};
 			};
 			buildConfigurationList = 2FCF919A740D108B179924F2 /* Build configuration list for PBXProject "RollIt" */;
 			developmentRegion = en;
@@ -324,6 +322,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
+				DEVELOPMENT_TEAM = 5HU4WGSUWN;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_CFBundleDisplayName = "Roll It";
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -400,6 +399,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
+				DEVELOPMENT_TEAM = 5HU4WGSUWN;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_CFBundleDisplayName = "Roll It";
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;

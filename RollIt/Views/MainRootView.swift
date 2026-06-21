@@ -27,103 +27,94 @@ public struct MainRootView: View {
                 // Splash State: Centered Large Logo
                 VStack {
                     Spacer()
-                    LogoView()
-                        .frame(width: 180, height: 180)
+                    LogoView(size: 180)
                         .matchedGeometryEffect(id: "logo", in: launchNamespace)
                     Spacer()
                 }
                 .transition(.opacity)
             } else {
                 // Active App State: TabBar Shell
-                VStack(spacing: 0) {
-                    // Header Bar (Anchored Logo)
-                    HStack {
-                        Spacer()
-                        LogoView()
-                            .frame(width: 40, height: 40)
-                            .matchedGeometryEffect(id: "logo", in: launchNamespace)
-                        Spacer()
-                        
-                        Button {
-                            showSettings = true
-                        } label: {
-                            Image(systemName: "slider.horizontal.3")
-                                .font(.title3)
-                                .foregroundColor(.neonAmber)
-                        }
-                        .padding(.trailing, 16)
-                    }
-                    .padding(.vertical, 8)
-                    .background(Color.oledBlack)
-                    
-                    Divider()
-                        .background(Color.white.opacity(0.15))
-                    
-                    TabView(selection: $selectedTab) {
-                        // Roll Tab
-                        NavigationStack {
-                            ZStack {
-                                Color.oledBlack.ignoresSafeArea()
-                                
-                                switch appState {
-                                case .welcome:
-                                    VStack(spacing: 24) {
-                                        Spacer()
-                                        
-                                        Text("Roll It")
-                                            .font(.system(size: 40, weight: .bold, design: .rounded))
-                                            .foregroundColor(.white)
-                                        
-                                        Text("Stop scrolling. Start watching.")
-                                            .font(.subheadline)
-                                            .foregroundColor(.secondaryText)
-                                            .multilineTextAlignment(.center)
-                                        
-                                        Spacer()
-                                        
-                                        Button {
-                                            withAnimation(.easeInOut) {
-                                                appState = .quiz
-                                            }
-                                        } label: {
-                                            Text("Start Quiz")
-                                                .font(.headline)
-                                                .foregroundColor(.oledBlack)
-                                                .frame(maxWidth: .infinity)
-                                                .padding(.vertical, 16)
-                                                .background(
-                                                    RoundedRectangle(cornerRadius: 12)
-                                                        .fill(Color.neonAmber)
-                                                )
+                TabView(selection: $selectedTab) {
+                    // Roll Tab
+                    NavigationStack {
+                        ZStack {
+                            Color.oledBlack.ignoresSafeArea()
+                            
+                            switch appState {
+                            case .welcome:
+                                VStack(spacing: 24) {
+                                    Spacer()
+                                    
+                                    // Logo is brought into the main welcome area to fill empty black space
+                                    LogoView(size: 140)
+                                        .matchedGeometryEffect(id: "logo", in: launchNamespace)
+                                    
+                                    Text("Roll It")
+                                        .font(.system(size: 40, weight: .bold, design: .rounded))
+                                        .foregroundColor(.white)
+                                    
+                                    Text("Stop scrolling. Start watching.")
+                                        .font(.subheadline)
+                                        .foregroundColor(.secondaryText)
+                                        .multilineTextAlignment(.center)
+                                    
+                                    Spacer()
+                                    
+                                    Button {
+                                        withAnimation(.easeInOut) {
+                                            appState = .quiz
                                         }
-                                        .padding(.horizontal, 24)
-                                        .padding(.bottom, 48)
+                                    } label: {
+                                        Text("Start Quiz")
+                                            .font(.headline)
+                                            .foregroundColor(.oledBlack)
+                                            .frame(maxWidth: .infinity)
+                                            .padding(.vertical, 16)
+                                            .background(
+                                                RoundedRectangle(cornerRadius: 12)
+                                                    .fill(Color.neonAmber)
+                                            )
                                     }
-                                case .quiz:
-                                    QuizWizardView(appState: $appState, activeCriteria: $activeCriteria)
-                                        .transition(.asymmetric(insertion: .move(edge: .trailing), removal: .move(edge: .leading)))
-                                case .suggestions:
-                                    MovieSuggestionView(appState: $appState, criteria: activeCriteria)
-                                        .transition(.opacity)
+                                    .padding(.horizontal, 24)
+                                    .padding(.bottom, 48)
+                                }
+                            case .quiz:
+                                QuizWizardView(appState: $appState, activeCriteria: $activeCriteria)
+                                    .transition(.asymmetric(insertion: .move(edge: .trailing), removal: .move(edge: .leading)))
+                            case .suggestions:
+                                MovieSuggestionView(appState: $appState, criteria: activeCriteria)
+                                    .transition(.opacity)
+                            }
+                        }
+                        .toolbar {
+                            if appState != .quiz {
+                                ToolbarItem(placement: .navigationBarTrailing) {
+                                    Button {
+                                        showSettings = true
+                                    } label: {
+                                        Image(systemName: "slider.horizontal.3")
+                                            .font(.title3)
+                                            .foregroundColor(.neonAmber)
+                                    }
                                 }
                             }
                         }
-                        .tabItem {
-                            Label("Roll", systemImage: "film.fill")
-                        }
-                        .tag(0)
-                        
-                        // History Log Tab
-                        NavigationStack {
-                            LogTabView()
-                        }
-                        .tabItem {
-                            Label("Log", systemImage: "clock.fill")
-                        }
-                        .tag(1)
                     }
-                    .tint(.neonAmber)
+                    .tabItem {
+                        Label("Roll", systemImage: "film.fill")
+                    }
+                    .tag(0)
+                    
+                    // History Log Tab
+                    NavigationStack {
+                        LogTabView()
+                    }
+                    .tabItem {
+                        Label("Log", systemImage: "clock.fill")
+                    }
+                    .tag(1)
                 }
+                .tint(.neonAmber)
             }
         }
         .preferredColorScheme(.dark)
