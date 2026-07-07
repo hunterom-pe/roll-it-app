@@ -142,8 +142,69 @@ public struct SettingsView: View {
                                 }
                                 .padding(.horizontal)
                             }
+                            
+                            // About & Legal Section
+                            VStack(alignment: .leading, spacing: 16) {
+                                Text("About & Legal")
+                                    .font(.headline)
+                                    .foregroundColor(.neonAmber)
+                                    .padding(.horizontal)
+                                
+                                VStack(alignment: .leading, spacing: 14) {
+                                    // TMDB Attribution
+                                    VStack(alignment: .leading, spacing: 6) {
+                                        Text("Data Provider")
+                                            .font(.subheadline)
+                                            .fontWeight(.bold)
+                                            .foregroundColor(.white)
+                                        Text("This product uses the TMDB API but is not endorsed or certified by TMDB.")
+                                            .font(.caption)
+                                            .foregroundColor(.secondaryText)
+                                            .lineSpacing(4)
+                                    }
+                                    .padding()
+                                    .background(Color.white.opacity(0.05))
+                                    .cornerRadius(8)
+                                    
+                                    // Legal & Support Links
+                                    VStack(spacing: 0) {
+                                        Link(destination: URL(string: "https://github.com/hunterom-pe/roll-it-app/blob/main/PRIVACY.md")!) {
+                                            HStack {
+                                                Image(systemName: "hand.raised.fill")
+                                                    .foregroundColor(.neonAmber)
+                                                Text("Privacy Policy")
+                                                Spacer()
+                                                Image(systemName: "arrow.up.forward.app")
+                                                    .font(.caption)
+                                            }
+                                            .padding()
+                                            .foregroundColor(.white)
+                                        }
+                                        
+                                        Divider()
+                                            .background(Color.white.opacity(0.1))
+                                        
+                                        Link(destination: URL(string: "https://github.com/hunterom-pe/roll-it-app/issues")!) {
+                                            HStack {
+                                                Image(systemName: "questionmark.circle.fill")
+                                                    .foregroundColor(.neonAmber)
+                                                Text("Support & Feedback")
+                                                Spacer()
+                                                Image(systemName: "arrow.up.forward.app")
+                                                    .font(.caption)
+                                            }
+                                            .padding()
+                                            .foregroundColor(.white)
+                                        }
+                                    }
+                                    .background(Color.white.opacity(0.05))
+                                    .cornerRadius(8)
+                                }
+                                .padding(.horizontal)
+                            }
                         }
                         .padding(.top, 16)
+                        .padding(.bottom, 24)
                     }
                     
                     Spacer()
